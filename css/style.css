@@ -350,6 +350,11 @@ body {
   transform: rotate(-3deg);
 }
 
+.log-table .log-row-prev .signature-cell {
+  color: #1a3a6b;
+  font-style: normal;
+}
+
 .btn {
   border: none;
   border-radius: 6px;
@@ -377,6 +382,28 @@ body {
 .btn-sm {
   padding: 0.4rem 0.85rem;
   font-size: 0.8rem;
+}
+
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0 2rem;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
 }
 
 .toast {

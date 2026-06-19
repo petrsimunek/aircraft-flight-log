@@ -12,7 +12,7 @@
 <body>
   <header class="header">
     <div class="container">
-      <h1>Letový deník</h1>
+      <h1>✈️ Letový deník – generátor 😁</h1>
       <p class="subtitle">Generátor údajů pro manuální zápis do letového deníku</p>
     </div>
   </header>
@@ -29,7 +29,7 @@
 
         <div class="field">
           <label for="landings-before">Počet vzletů letadla před letem</label>
-          <input type="number" id="landings-before" min="0" step="1" placeholder="např. 842">
+          <input type="text" id="landings-before" inputmode="numeric" pattern="[0-9]*" placeholder="např. 842">
         </div>
 
         <div class="form-divider" aria-hidden="true"></div>
@@ -46,7 +46,7 @@
 
         <div class="field">
           <label for="landings">Počet vzletů za let</label>
-          <input type="number" id="landings" min="1" step="1" value="1">
+          <input type="text" id="landings" inputmode="numeric" pattern="[0-9]*" value="1">
         </div>
 
         <div class="field">
@@ -128,7 +128,7 @@
                 <td id="dud-r1-total-m">—</td>
                 <td id="dud-r1-total-tk">—</td>
                 <td>XXXX</td>
-                <td>XXXX</td>
+                <td id="dud-r1-signature" class="signature-cell">—</td>
               </tr>
               <tr class="log-row-curr">
                 <td id="dud-r2-date">—</td>
@@ -199,7 +199,7 @@
                 <td id="yai-r1-tach">—</td>
                 <td id="yai-r1-landings-total">—</td>
                 <td>XXXX</td>
-                <td>XXXX</td>
+                <td id="yai-r1-signature" class="signature-cell">—</td>
               </tr>
               <tr class="log-row-curr">
                 <td id="yai-r2-date">—</td>
@@ -232,6 +232,15 @@
     </section>
   </main>
 
+  <footer class="footer">
+    <div class="container">
+      <p>© <span id="footer-year"></span> Petr Šimůnek · <a href="https://github.com/petrsimunek/aircraft-flight-log" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+  </script>
   <script src="js/pilots.js"></script>
   <script src="js/exercises.js"></script>
   <script src="js/templates.js"></script>

@@ -229,6 +229,11 @@ function syncNotes(textarea, state, autoNotes) {
   }
 }
 
+function setSignature(id, commander) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = commander || '—';
+}
+
 function updateDud24(record) {
   if (record.startParts) {
     setText('dud-r1-total-h', record.startParts.h);
@@ -242,6 +247,7 @@ function updateDud24(record) {
 
   renderCrewCell(els.dudR1Crew, crewRow1);
   renderCrewCell(els.dudR2Crew, crewRow2);
+  setSignature('dud-r1-signature', crewRow1?.commander);
 
   setText('dud-r2-date', record.date);
   setText('dud-r2-dep-place', record.departure);
@@ -267,7 +273,7 @@ function updateDud24(record) {
     setText('dud-r2-total-tk', record.error ? '!' : null);
   }
 
-  document.getElementById('dud-r2-signature').textContent = crewRow2?.commander || '—';
+  setSignature('dud-r2-signature', crewRow2?.commander);
   syncNotes(els.dudR2Notes, notesState.dud, record.dudNotes);
 }
 
@@ -281,6 +287,7 @@ function updateYai56(record) {
 
   renderCrewCell(els.yaiR1Crew, crewRow1);
   renderCrewCell(els.yaiR2Crew, crewRow2);
+  setSignature('yai-r1-signature', crewRow1?.commander);
 
   setText('yai-r2-date', record.date);
   setText('yai-r2-dep-place', record.departure);
@@ -303,7 +310,7 @@ function updateYai56(record) {
 
   setText('yai-r2-landings-total', record.error ? '!' : record.landingsTotal);
 
-  document.getElementById('yai-r2-signature').textContent = crewRow2?.commander || '—';
+  setSignature('yai-r2-signature', crewRow2?.commander);
   syncNotes(els.yaiR2Notes, notesState.yai, record.yaiNotes);
 }
 
