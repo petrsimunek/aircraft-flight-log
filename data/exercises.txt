@@ -1,0 +1,6 @@
+# Formát: kód|popis|solo|dual
+# Třetí sloupec: solo = sólo let (1 pilot), dual = dvojí let (2 piloti)
+
+cv.14|kontrolní let s instruktorem|dual
+cv.15|samostatný let po okruhu|solo
+cv.21|samostatný navigační let|solo

@@ -88,12 +88,41 @@ body {
   grid-column: 1 / -1;
 }
 
+.form-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: var(--border);
+  margin: 0.25rem 0;
+}
+
 .field label {
   font-size: 0.8rem;
   font-weight: 500;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+.label-link {
+  margin-left: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 600;
+}
+
+.label-link:hover {
+  text-decoration: underline;
+}
+
+.field-hint {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 .field input {
@@ -121,6 +150,40 @@ body {
 
 .section-header h2 {
   margin-bottom: 0;
+}
+
+.template-tabs {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+
+.template-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.template-tab:hover {
+  color: var(--text);
+}
+
+.template-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.template-panel[hidden] {
+  display: none;
 }
 
 .paper-wrap {
@@ -190,18 +253,26 @@ body {
   padding-bottom: 0.5rem;
 }
 
-.log-table #row-1 td {
+.log-table .log-row-prev td {
   color: #999;
   font-style: italic;
   font-weight: 400;
 }
 
-.log-table #row-1 .cell-split span {
+.log-table .log-row-prev .cell-split span {
   color: #999;
   font-style: italic;
 }
 
-.log-table #row-2 td {
+.log-table .log-row-prev .pilot-name {
+  color: #999;
+}
+
+.log-table .log-row-prev .pilot-name:hover {
+  color: #777;
+}
+
+.log-table .log-row-curr td {
   color: #111;
   font-weight: 500;
 }
@@ -225,14 +296,6 @@ body {
 
 .pilot-name:hover {
   color: #1a3a6b;
-}
-
-.log-table #row-1 .pilot-name {
-  color: #999;
-}
-
-.log-table #row-1 .pilot-name:hover {
-  color: #777;
 }
 
 .pilot-bubble {

@@ -35,9 +35,18 @@ function pickRandomPilot(excludeNames = []) {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-function pickCrew() {
+function pickCrew(pilotCount = 2) {
   const pilot1 = pickRandomPilot();
   if (!pilot1) return { pilot1: null, pilot2: null, label: '—', commander: '—' };
+
+  if (pilotCount <= 1) {
+    return {
+      pilot1,
+      pilot2: null,
+      label: pilot1.name,
+      commander: pilot1.name,
+    };
+  }
 
   const pilot2 = pickRandomPilot([pilot1.name]);
   if (!pilot2) {
@@ -137,7 +146,7 @@ function hidePilotBubble() {
 }
 
 function initPilotBubbles() {
-  document.querySelector('.log-table').addEventListener('click', (e) => {
+  document.getElementById('output-section').addEventListener('click', (e) => {
     const btn = e.target.closest('.pilot-name');
     if (!btn) return;
     e.stopPropagation();

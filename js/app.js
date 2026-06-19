@@ -7,19 +7,65 @@ const els = {
   tachEnd: document.getElementById('tach-end'),
   landings: document.getElementById('landings'),
   exercises: document.getElementById('exercises'),
-  r2Notes: document.getElementById('r2-notes'),
-  r1Crew: document.getElementById('r1-crew'),
-  r2Crew: document.getElementById('r2-crew'),
+  exerciseHint: document.getElementById('exercise-hint'),
+  dudR1Crew: document.getElementById('dud-r1-crew'),
+  dudR2Crew: document.getElementById('dud-r2-crew'),
+  dudR2Notes: document.getElementById('dud-r2-notes'),
+  yaiR1Crew: document.getElementById('yai-r1-crew'),
+  yaiR2Crew: document.getElementById('yai-r2-crew'),
+  yaiR2Notes: document.getElementById('yai-r2-notes'),
 };
 
 let crewRow1 = null;
 let crewRow2 = null;
-let notesDirty = false;
-let lastAutoNotes = '';
+
+const notesState = {
+  dud: { dirty: false, lastAuto: '' },
+  yai: { dirty: false, lastAuto: '' },
+};
+
+const FORM_STORAGE_KEY = 'flight-log-form';
+
+function saveForm() {
+  const data = {
+    tachStart: els.tachStart.value,
+    tachEnd: els.tachEnd.value,
+    takeoff: els.takeoff.value,
+    landings: els.landings.value,
+    departure: els.departure.value,
+    arrival: els.arrival.value,
+    landingsBefore: els.landingsBefore.value,
+    exercises: els.exercises.value,
+  };
+  localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(data));
+}
+
+function loadForm() {
+  try {
+    const raw = localStorage.getItem(FORM_STORAGE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (data.tachStart != null) els.tachStart.value = data.tachStart;
+    if (data.tachEnd != null) els.tachEnd.value = data.tachEnd;
+    if (data.takeoff != null) els.takeoff.value = data.takeoff;
+    if (data.landings != null) els.landings.value = data.landings;
+    if (data.departure != null) els.departure.value = data.departure;
+    if (data.arrival != null) els.arrival.value = data.arrival;
+    if (data.landingsBefore != null) els.landingsBefore.value = data.landingsBefore;
+    if (data.exercises != null) els.exercises.value = data.exercises;
+  } catch {
+    // ignore corrupt storage
+  }
+}
 
 function pickBothCrews() {
-  crewRow1 = pickCrew();
-  crewRow2 = pickCrew();
+  crewRow1 = pickCrew(2);
+  crewRow2 = pickCrewForExercise();
+}
+
+function pickCrewForExercise() {
+  const ex = findExercise(els.exercises.value);
+  return pickCrew(crewSizeForExercise(ex));
 }
 
 function parseNum(value) {
@@ -138,8 +184,13 @@ function generateRecord(data) {
   const flightDuration =
     diffMin != null && diffMin >= 0 ? formatDurationHm(diffMin) : null;
 
-  const autoNotes =
+  const tachEndNote =
     data.tachEnd != null ? `Motohodiny: ${formatTachBoth(data.tachEnd)}` : '';
+
+  const exercise = findExercise(data.exercises);
+  const flightType = exercise ? exercise.code : data.exercises || null;
+
+  const yaiNotes = flightType || '';
 
   return {
     error,
@@ -150,74 +201,121 @@ function generateRecord(data) {
     landing,
     flightDuration,
     landings: data.landings,
-    exercises: data.exercises,
+    flightType,
     startParts,
     endParts,
+    tachStart: data.tachStart,
+    tachEnd: data.tachEnd,
     landingsBefore: data.landingsBefore,
     landingsTotal,
-    autoNotes,
+    dudNotes: tachEndNote,
+    yaiNotes,
   };
 }
 
 function setText(id, value) {
-  document.getElementById(id).textContent = cell(value);
+  const el = document.getElementById(id);
+  if (el) el.textContent = cell(value);
+}
+
+function syncNotes(textarea, state, autoNotes) {
+  if (!textarea) return;
+  if (!state.dirty && autoNotes !== state.lastAuto) {
+    textarea.value = autoNotes;
+    state.lastAuto = autoNotes;
+  } else if (!state.dirty && !autoNotes) {
+    textarea.value = '';
+    state.lastAuto = '';
+  }
+}
+
+function updateDud24(record) {
+  if (record.startParts) {
+    setText('dud-r1-total-h', record.startParts.h);
+    setText('dud-r1-total-m', record.startParts.m);
+    setText('dud-r1-total-tk', record.landingsBefore);
+  } else {
+    setText('dud-r1-total-h', null);
+    setText('dud-r1-total-m', null);
+    setText('dud-r1-total-tk', null);
+  }
+
+  renderCrewCell(els.dudR1Crew, crewRow1);
+  renderCrewCell(els.dudR2Crew, crewRow2);
+
+  setText('dud-r2-date', record.date);
+  setText('dud-r2-dep-place', record.departure);
+  setText('dud-r2-dep-time', record.takeoff);
+  setText('dud-r2-arr-place', record.arrival);
+  setText('dud-r2-arr-time', record.landing);
+  setText('dud-r2-takeoffs', record.landings);
+  setText('dud-r2-type', record.flightType);
+
+  if (record.flightDuration && !record.error) {
+    setText('dud-r2-flight', record.flightDuration);
+  } else {
+    setText('dud-r2-flight', record.error ? '!' : null);
+  }
+
+  if (record.endParts && !record.error) {
+    setText('dud-r2-total-h', record.endParts.h);
+    setText('dud-r2-total-m', record.endParts.m);
+    setText('dud-r2-total-tk', record.landingsTotal);
+  } else {
+    setText('dud-r2-total-h', record.error ? '!' : null);
+    setText('dud-r2-total-m', record.error ? '!' : null);
+    setText('dud-r2-total-tk', record.error ? '!' : null);
+  }
+
+  document.getElementById('dud-r2-signature').textContent = crewRow2?.commander || '—';
+  syncNotes(els.dudR2Notes, notesState.dud, record.dudNotes);
+}
+
+function updateYai56(record) {
+  if (record.tachStart != null) {
+    setText('yai-r1-tach', formatTachDecimal(record.tachStart));
+  } else {
+    setText('yai-r1-tach', null);
+  }
+  setText('yai-r1-landings-total', record.landingsBefore);
+
+  renderCrewCell(els.yaiR1Crew, crewRow1);
+  renderCrewCell(els.yaiR2Crew, crewRow2);
+
+  setText('yai-r2-date', record.date);
+  setText('yai-r2-dep-place', record.departure);
+  setText('yai-r2-dep-time', record.takeoff);
+  setText('yai-r2-arr-place', record.arrival);
+  setText('yai-r2-arr-time', record.landing);
+  setText('yai-r2-takeoffs', record.landings);
+
+  if (record.flightDuration && !record.error) {
+    setText('yai-r2-flight', record.flightDuration);
+  } else {
+    setText('yai-r2-flight', record.error ? '!' : null);
+  }
+
+  if (record.tachEnd != null && !record.error) {
+    setText('yai-r2-tach', formatTachDecimal(record.tachEnd));
+  } else {
+    setText('yai-r2-tach', record.error ? '!' : null);
+  }
+
+  setText('yai-r2-landings-total', record.error ? '!' : record.landingsTotal);
+
+  document.getElementById('yai-r2-signature').textContent = crewRow2?.commander || '—';
+  syncNotes(els.yaiR2Notes, notesState.yai, record.yaiNotes);
 }
 
 function updateOutput() {
   const record = generateRecord(readForm());
-
-  if (record.startParts) {
-    setText('r1-total-h', record.startParts.h);
-    setText('r1-total-m', record.startParts.m);
-    setText('r1-total-tk', record.landingsBefore);
-  } else {
-    setText('r1-total-h', null);
-    setText('r1-total-m', null);
-    setText('r1-total-tk', null);
-  }
-
-  renderCrewCell(els.r1Crew, crewRow1);
-  renderCrewCell(els.r2Crew, crewRow2);
-
-  setText('r2-date', record.date);
-  setText('r2-dep-place', record.departure);
-  setText('r2-dep-time', record.takeoff);
-  setText('r2-arr-place', record.arrival);
-  setText('r2-arr-time', record.landing);
-  setText('r2-takeoffs', record.landings);
-  setText('r2-type', record.exercises);
-
-  if (record.flightDuration && !record.error) {
-    setText('r2-flight', record.flightDuration);
-  } else {
-    setText('r2-flight', record.error ? '!' : null);
-  }
-
-  if (record.endParts && !record.error) {
-    setText('r2-total-h', record.endParts.h);
-    setText('r2-total-m', record.endParts.m);
-    setText('r2-total-tk', record.landingsTotal);
-  } else {
-    setText('r2-total-h', record.error ? '!' : null);
-    setText('r2-total-m', record.error ? '!' : null);
-    setText('r2-total-tk', record.error ? '!' : null);
-  }
-
-  const sigEl = document.getElementById('r2-signature');
-  sigEl.textContent = crewRow2?.commander || '—';
-
-  if (!notesDirty && record.autoNotes !== lastAutoNotes) {
-    els.r2Notes.value = record.autoNotes;
-    lastAutoNotes = record.autoNotes;
-  } else if (!notesDirty && !record.autoNotes) {
-    els.r2Notes.value = '';
-    lastAutoNotes = '';
-  }
+  updateDud24(record);
+  updateYai56(record);
 }
 
 function tableToText() {
   const rows = [];
-  const table = document.querySelector('.log-table');
+  const table = getActiveTable();
   table.querySelectorAll('thead tr').forEach((tr) => {
     rows.push([...tr.cells].map((c) => c.textContent.trim().replace(/\s+/g, ' ')).join('\t'));
   });
@@ -252,15 +350,25 @@ function showToast(message) {
   toastEl._timer = setTimeout(() => toastEl.classList.remove('show'), 2000);
 }
 
-els.r2Notes.addEventListener('input', () => {
-  notesDirty = true;
+els.dudR2Notes.addEventListener('input', () => {
+  notesState.dud.dirty = true;
+});
+
+els.yaiR2Notes.addEventListener('input', () => {
+  notesState.yai.dirty = true;
 });
 
 document.querySelectorAll('.form-grid input').forEach((input) => {
   input.addEventListener('input', () => {
     if (input === els.tachStart || input === els.departure) {
-      pickBothCrews();
+      crewRow1 = pickCrew(2);
+      crewRow2 = pickCrewForExercise();
     }
+    if (input === els.exercises) {
+      updateExerciseHint(els.exercises, els.exerciseHint);
+      crewRow2 = pickCrewForExercise();
+    }
+    saveForm();
     updateOutput();
   });
 });
@@ -270,7 +378,11 @@ document.getElementById('btn-copy').addEventListener('click', () => {
 });
 
 async function init() {
-  await loadPilots();
+  await Promise.all([loadPilots(), loadExercises()]);
+  initExerciseDatalist();
+  initTemplateTabs();
+  loadForm();
+  updateExerciseHint(els.exercises, els.exerciseHint);
   pickBothCrews();
   initPilotBubbles();
   updateOutput();
