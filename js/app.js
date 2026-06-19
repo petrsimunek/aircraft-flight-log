@@ -58,6 +58,32 @@ function loadForm() {
   }
 }
 
+function clearForm() {
+  localStorage.removeItem(FORM_STORAGE_KEY);
+
+  els.tachStart.value = '';
+  els.tachEnd.value = '';
+  els.takeoff.value = '';
+  els.landings.value = '1';
+  els.departure.value = '';
+  els.arrival.value = '';
+  els.landingsBefore.value = '';
+  els.exercises.value = '';
+
+  els.exerciseHint.hidden = true;
+  els.exerciseHint.textContent = '';
+
+  notesState.dud.dirty = false;
+  notesState.dud.lastAuto = '';
+  notesState.yai.dirty = false;
+  notesState.yai.lastAuto = '';
+  els.dudR2Notes.value = '';
+  els.yaiR2Notes.value = '';
+
+  pickBothCrews();
+  updateOutput();
+}
+
 function pickBothCrews() {
   crewRow1 = pickCrew(2);
   crewRow2 = pickCrewForExercise();
@@ -382,6 +408,12 @@ document.querySelectorAll('.form-grid input').forEach((input) => {
 
 document.getElementById('btn-copy').addEventListener('click', () => {
   navigator.clipboard.writeText(tableToText()).then(() => showToast('Zkopírováno'));
+});
+
+document.getElementById('btn-clear-form').addEventListener('click', () => {
+  if (!confirm('Smazat uložená data a začít znovu?')) return;
+  clearForm();
+  showToast('Data smazána');
 });
 
 async function init() {

@@ -40,3 +40,12 @@ python3 -m http.server 8080
 ## Nasazení na Cloudflare Pages
 
 Framework preset: **None**, build command prázdný, output directory `/`.
+
+## Instalace na plochu (PWA)
+
+Aplikace podporuje uložení na plochu mobilního telefonu:
+
+- **Android (Chrome):** nabídka prohlížeče → *Nainstalovat aplikaci* / *Přidat na plochu*
+- **iPhone (Safari):** sdílecí tlačítko → *Přidat na plochu*
+
+Vyžaduje nasazení přes HTTPS (Cloudflare Pages to splňuje).
