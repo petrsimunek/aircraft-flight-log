@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Letový deník – generátor údajů</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Letový deník</h1>
+      <p class="subtitle">Generátor údajů pro zápis rukou</p>
+    </div>
+  </header>
+
+  <main class="container container-wide">
+    <section class="card">
+      <h2>Vstupní údaje</h2>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="tach-start">Stav motohodin na začátku</label>
+          <input type="text" id="tach-start" inputmode="decimal" placeholder="např. 1356,9">
+        </div>
+
+        <div class="field">
+          <label for="tach-end">Stav motohodin na konci</label>
+          <input type="text" id="tach-end" inputmode="decimal" placeholder="např. 1357,5">
+        </div>
+
+        <div class="field">
+          <label for="takeoff">Čas vzletu</label>
+          <input type="time" id="takeoff" step="300">
+        </div>
+
+        <div class="field">
+          <label for="landings">Počet vzletů za let</label>
+          <input type="number" id="landings" min="1" step="1" value="1">
+        </div>
+
+        <div class="field">
+          <label for="departure">Letiště vzletu</label>
+          <input type="text" id="departure" maxlength="4" placeholder="LKPR" style="text-transform: uppercase">
+        </div>
+
+        <div class="field">
+          <label for="arrival">Letiště přistání</label>
+          <input type="text" id="arrival" maxlength="4" placeholder="LKVO" style="text-transform: uppercase">
+        </div>
+
+        <div class="field">
+          <label for="landings-before">Přistání letadla před letem</label>
+          <input type="number" id="landings-before" min="0" step="1" placeholder="např. 842">
+        </div>
+
+        <div class="field full-width">
+          <label for="exercises">Cvičení</label>
+          <input type="text" id="exercises" placeholder="např. okruhy, navigace, přistání">
+        </div>
+      </div>
+    </section>
+
+    <section class="card card-paper" id="output-section">
+      <div class="section-header">
+        <h2>Záznam do deníku</h2>
+        <button type="button" class="btn btn-secondary btn-sm" id="btn-copy">Kopírovat</button>
+      </div>
+
+      <div class="paper-wrap">
+        <table class="log-table">
+          <thead>
+            <tr>
+              <th rowspan="2">Datum</th>
+              <th rowspan="2">Posádka</th>
+              <th rowspan="2" class="split-header">Místo/čas odletu</th>
+              <th rowspan="2" class="split-header">Místo/čas příletu</th>
+              <th rowspan="2">Doba letu/provozu</th>
+              <th rowspan="2">Počet<br>vzletů</th>
+              <th rowspan="2">Druh letu</th>
+              <th colspan="3">Doba provozu celkem</th>
+              <th rowspan="2">Poznámky</th>
+              <th rowspan="2">Podpis velitele</th>
+            </tr>
+            <tr>
+              <th>h</th>
+              <th>m</th>
+              <th>vzlety</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="row-1">
+              <td id="r1-date">XXXX</td>
+              <td id="r1-crew" class="crew-cell">XXXX</td>
+              <td class="split-cell">
+                <div class="cell-split">
+                  <span id="r1-dep-place">XXXX</span>
+                  <span id="r1-dep-time">XXXX</span>
+                </div>
+              </td>
+              <td class="split-cell">
+                <div class="cell-split">
+                  <span id="r1-arr-place">XXXX</span>
+                  <span id="r1-arr-time">XXXX</span>
+                </div>
+              </td>
+              <td id="r1-flight">XXXX</td>
+              <td id="r1-takeoffs">XXXX</td>
+              <td id="r1-type">XXXX</td>
+              <td id="r1-total-h">—</td>
+              <td id="r1-total-m">—</td>
+              <td id="r1-total-tk">—</td>
+              <td id="r1-notes">XXXX</td>
+              <td id="r1-signature">XXXX</td>
+            </tr>
+            <tr id="row-2">
+              <td id="r2-date">—</td>
+              <td id="r2-crew" class="crew-cell">—</td>
+              <td class="split-cell">
+                <div class="cell-split">
+                  <span id="r2-dep-place">—</span>
+                  <span id="r2-dep-time">—</span>
+                </div>
+              </td>
+              <td class="split-cell">
+                <div class="cell-split">
+                  <span id="r2-arr-place">—</span>
+                  <span id="r2-arr-time">—</span>
+                </div>
+              </td>
+              <td id="r2-flight">—</td>
+              <td id="r2-takeoffs">—</td>
+              <td id="r2-type">—</td>
+              <td id="r2-total-h">—</td>
+              <td id="r2-total-m">—</td>
+              <td id="r2-total-tk">—</td>
+              <td class="notes-cell">
+                <textarea id="r2-notes" rows="2" placeholder=""></textarea>
+              </td>
+              <td id="r2-signature" class="signature-cell">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/pilots.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

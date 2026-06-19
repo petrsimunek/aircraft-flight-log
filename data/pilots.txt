@@ -1,0 +1,35 @@
+# Formát: Jméno pilota|Popis proslulosti
+# Řádky začínající # jsou ignorovány. Popis může obsahovat znak |.
+
+Charles Lindbergh|První sólový nepřerušovaný let přes Atlantický oceán (1927).
+Amelia Earhart|První žena, která sólově přeletěla Atlantik (1932).
+Chuck Yeager|První člověk, který ve vodorovném letu prolomil zvukovou bariéru (1947).
+Yuri Gagarin|První člověk ve vesmíru – oběžná dráha Země na Vostoku 1 (1961).
+Neil Armstrong|První člověk, který vstoupil na povrch Měsíce (1969).
+Bessie Coleman|První afroamerická žena s pilotní licencí (1921).
+Howard Hughes|Držitel světového rychlostního rekordu a průkopník komerčního letectví.
+Antoine de Saint-Exupéry|Spisovatel a průkopník dálkových poštovních letů; autor Malého prince.
+Jan Kašpar|První český pilot, který na letadle doletěl do zahraničí – Bělehrad (1912).
+Otto Houba|Český průkopník letecké pošty a dálkových letů v meziválečném období.
+Eva Nováková|První československá žena s komerční pilotní licencí (1930).
+Richard Bach|Autor bestselleru Jonathan Livingston Racek, bývalý pilot USAF a námořní pěchoty.
+Manfred von Richthofen|„Rudý baron“ – nejúspěšnější stíhací pilot první světové války.
+Harriet Quimby|První americká žena s pilotní licencí a první žena, která přeletěla Lamanšský průstup.
+Louis Blériot|První pilot, který přeletěl Lamanšský průstup v monoplanu (1909).
+Sabiha Gökçen|První turecká žena s vojenskou pilotní licencí a první žena stíhačka na světě.
+Antonín Vlaším|Český akrobatický pilot a několikanásobný mistr světa v letecké akrobacii.
+Pete Mitchell|Fiktivní elitní stíhací pilot, přezdívaný Maverick – Top Gun.
+Orville Wright|Spolu s bratrem uskutečnil první řízený motorový let v roce 1903.
+Wilbur Wright|Spolutvůrce prvního úspěšného letadla a průkopník moderního letectví.
+Erich Hartmann|Nejúspěšnější stíhací pilot historie s 352 sestřely.
+David Hecl|Český kapitán Airbusu A380 a významná osobnost současného dopravního letectví.
+Petr Kopfstein|Český akrobatický pilot a vítěz Red Bull Air Race Challenger Cupu.
+Martin Šonka|Mistr světa Red Bull Air Race 2018.
+František Fajtl|Československý pilot RAF a válečný hrdina druhé světové války.
+Douglas Bader|Britský stíhací pilot létající i po amputaci obou nohou.
+Porco Rosso|Slavný pilot hydroplánu z animovaného filmu Studia Ghibli.
+James T. Kirk|Odvážný kapitán hvězdné lodi Enterprise.
+Samantha Carter|Pilotka, astronautka a vědkyně programu Hvězdné brány.
+Cameron Mitchell|Stíhací pilot F-302 a velitel SG-1.
+Han Solo|Kapitán Millennium Falconu a jeden z nejslavnějších pilotů sci-fi.
+Luke Skywalker|Stíhací pilot Povstalců a hrdina Hvězdných válek.
