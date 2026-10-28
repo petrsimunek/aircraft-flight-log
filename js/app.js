@@ -341,18 +341,30 @@ function updateYai56(record) {
   syncNotes(els.yaiR2Notes, notesState.yai, record.yaiNotes);
 }
 
+function pluralizeVzlet(count) {
+  if (count == null || isNaN(count)) return 'vzletů';
+  const n = Math.abs(Math.floor(count));
+  if (n === 1) return 'vzlet';
+  const mod100 = n % 100;
+  if (mod100 >= 11 && mod100 <= 14) return 'vzletů';
+  const mod10 = n % 10;
+  if (mod10 >= 2 && mod10 <= 4) return 'vzlety';
+  return 'vzletů';
+}
+
 function buildReport(record) {
   const duration = record.flightDuration && !record.error ? record.flightDuration : '—';
   const takeoffs = record.landings != null ? String(record.landings) : '—';
+  const takeoffsWord = pluralizeVzlet(record.landings);
   const takeoffsTotal =
     record.landingsTotal != null && !record.error ? String(record.landingsTotal) : '—';
   const tach =
     record.tachEnd != null && !record.error ? formatTachDecimal(record.tachEnd) : '—';
 
   return (
-    `📍✈️ Po mém letu (${duration} / ${takeoffs} vzletů) hlásím:\n` +
-    `Vzlety celkem: ${takeoffsTotal}\n` +
-    `Stav počítadla mth: ${tach}`
+    `📍✈️ Po mém letu (${duration} / ${takeoffs} ${takeoffsWord}) hlásím:\n` +
+    `*Vzlety celkem: ${takeoffsTotal}*\n` +
+    `*Stav počítadla mth: ${tach}*`
   );
 }
 
