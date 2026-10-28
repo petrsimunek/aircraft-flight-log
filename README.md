@@ -18,6 +18,10 @@ Přepínání záložkami nad tabulkou:
 - **OK-DUD24** – původní formát s druhem letu a dobou provozu celkem (h, m, vzlety)
 - **OK-YAI56** – zjednodušený formát se stavem počítadla, vzlety celkem a cvičením v poznámkách
 
+## Hlášení
+
+Po poslední aktualizaci pokynů velitele je vyžadováno pravidelné hlášení stavu motohodin po každém letu, aby se zabránilo překročení servisních intervalů.
+
 ## Dataset pilotů
 
 Soubor `data/pilots.txt` – jeden pilot na řádek ve formátu `Jméno|Popis proslulosti`. Kliknutím na jméno v poli Posádka se zobrazí bublina s popisem.
