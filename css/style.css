@@ -152,6 +152,25 @@ body {
   margin-bottom: 0;
 }
 
+.report-text {
+  width: 100%;
+  min-height: 6.5rem;
+  resize: vertical;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.report-text:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
 .template-tabs {
   display: flex;
   gap: 0.35rem;

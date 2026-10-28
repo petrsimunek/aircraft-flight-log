@@ -14,6 +14,7 @@ const els = {
   yaiR1Crew: document.getElementById('yai-r1-crew'),
   yaiR2Crew: document.getElementById('yai-r2-crew'),
   yaiR2Notes: document.getElementById('yai-r2-notes'),
+  reportText: document.getElementById('report-text'),
 };
 
 let crewRow1 = null;
@@ -340,34 +341,30 @@ function updateYai56(record) {
   syncNotes(els.yaiR2Notes, notesState.yai, record.yaiNotes);
 }
 
+function buildReport(record) {
+  const duration = record.flightDuration && !record.error ? record.flightDuration : '—';
+  const takeoffs = record.landings != null ? String(record.landings) : '—';
+  const takeoffsTotal =
+    record.landingsTotal != null && !record.error ? String(record.landingsTotal) : '—';
+  const tach =
+    record.tachEnd != null && !record.error ? formatTachDecimal(record.tachEnd) : '—';
+
+  return (
+    `📍✈️ Po mém letu (${duration} / ${takeoffs} vzletů) hlásím:\n` +
+    `Vzlety celkem: ${takeoffsTotal}\n` +
+    `Stav počítadla mth: ${tach}`
+  );
+}
+
+function updateReport(record) {
+  els.reportText.value = buildReport(record);
+}
+
 function updateOutput() {
   const record = generateRecord(readForm());
   updateDud24(record);
   updateYai56(record);
-}
-
-function tableToText() {
-  const rows = [];
-  const table = getActiveTable();
-  table.querySelectorAll('thead tr').forEach((tr) => {
-    rows.push([...tr.cells].map((c) => c.textContent.trim().replace(/\s+/g, ' ')).join('\t'));
-  });
-  table.querySelectorAll('tbody tr').forEach((tr) => {
-    const cells = [...tr.cells].map((c) => {
-      const textarea = c.querySelector('textarea');
-      if (textarea) return textarea.value.trim().replace(/\s+/g, ' ');
-      if (c.classList.contains('crew-cell')) return c.textContent.trim().replace(/\s+/g, ' ');
-      const split = c.querySelector('.cell-split');
-      if (split) {
-        return [...split.querySelectorAll('span')]
-          .map((s) => s.textContent.trim())
-          .join(' ');
-      }
-      return c.textContent.trim().replace(/\s+/g, ' ');
-    });
-    rows.push(cells.join('\t'));
-  });
-  return rows.join('\n');
+  updateReport(record);
 }
 
 let toastEl;
@@ -406,8 +403,8 @@ document.querySelectorAll('.form-grid input').forEach((input) => {
   });
 });
 
-document.getElementById('btn-copy').addEventListener('click', () => {
-  navigator.clipboard.writeText(tableToText()).then(() => showToast('Zkopírováno'));
+document.getElementById('btn-copy-report').addEventListener('click', () => {
+  navigator.clipboard.writeText(els.reportText.value).then(() => showToast('Report zkopírován'));
 });
 
 document.getElementById('btn-clear-form').addEventListener('click', () => {
